@@ -9,47 +9,6 @@
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!-- <script src="colors.js"></script> -->
-<script type="text/javascript">
-	var checkLoginStatus = function(response) { // Called after the JS SDK has been initialized.
-		// statusChangeCallback(response);        // Returns the login status.
-		console.log(response);
-		if (response.status === 'connected') {
-		      document.querySelector('#authBtn').value = 'Logout';
-		      FB.api('/me', function(resp){
-		          document.querySelector('#name').innerHTML = 'Welcom ' + resp.name;
-		      });
-		} else {
-			document.querySelector('#authBtn').value = 'Login';
-			document.querySelector('#name').innerHTML = '';
-		}
-	}
-	
-	var info = function(info) {
-        alert('Width: ' + info.clientWidth + ' Height: ' + info.clientHeight);
-    }
-	window.fbAsyncInit = function() {
-		FB.init({
-			appId : '339369890070694',
-			cookie : true, // Enable cookies to allow the server to access the session.
-			xfbml : true, // Parse social plugins on this webpage.
-			version : 'v4.0' // Use this Graph API version for this call.
-		});
-
-		FB.getLoginStatus(checkLoginStatus);
-		
-		FB.Canvas.getPageInfo(info);
-	};
-	// Load the SDK asynchronously
-	(function(d, s, id) {
-		var js, fjs = d.getElementsByTagName(s)[0];
-		if (d.getElementById(id))
-			return;
-		js = d.createElement(s);
-		js.id = id;
-		js.src = "https://connect.facebook.net/en_US/sdk.js";
-		fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));
-</script>
 </head>
 <body>
 	<input type="button" id="authBtn" value="checking..."
@@ -67,8 +26,9 @@
           checkLoginStatus(res);
       });
     }
-  "> <span id="name"></span>
-  <input type="button" value = "button"  onclick="info()">
+  ">
+	<span id="name"></span>
+	<input type="button" value="button" onclick="info()">
 	<h1>
 		<a href="index.html">WEB</a>
 	</h1>
@@ -91,6 +51,67 @@
 		CERN in Switzerland.[2][3] The Web browser was released outside of
 		CERN in 1991, first to other research institutions starting in January
 		1991 and to the general public on the Internet in August 1991.</p>
+
+
+	<script type="text/javascript">
+		var checkLoginStatus = function(response) { // Called after the JS SDK has been initialized.
+			// statusChangeCallback(response);        // Returns the login status.
+			console.log(response);
+			if (response.status === 'connected') {
+			      document.querySelector('#authBtn').value = 'Logout';
+			      FB.api('/me', function(resp){
+			          document.querySelector('#name').innerHTML = 'Welcom ' + resp.name;
+			      });
+			      FB.api(
+						    "/me/feed",
+						    function (response) {
+						      if (response && !response.error) {
+						        /* handle the result */
+						        console.log("Feed : ", response);
+						      }
+						    }
+						);
+			      FB.api(
+			    		    "/me?fields=birthday,picture",
+			    		    function (response) {
+			    		      if (response && !response.error) {
+			    		        /* handle the result */
+			    		        console.log("Profile : ", response);
+			    		      }
+			    		    }
+			    		);
+			} else {
+				document.querySelector('#authBtn').value = 'Login';
+				document.querySelector('#name').innerHTML = '';
+			}
+		}
+		
+		var info = function(info) {
+	        alert('Width: ' + info.clientWidth + ' Height: ' + info.clientHeight);
+	    }
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId : '339369890070694',
+				cookie : true, // Enable cookies to allow the server to access the session.
+				xfbml : true, // Parse social plugins on this webpage.
+				version : 'v4.0' // Use this Graph API version for this call.
+			});
+	
+			FB.getLoginStatus(checkLoginStatus);
+			
+			
+		};
+		// Load the SDK asynchronously
+		(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id))
+				return;
+			js = d.createElement(s);
+			js.id = id;
+			js.src = "https://connect.facebook.net/en_US/sdk.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+</script>
 </body>
 
 </html>
